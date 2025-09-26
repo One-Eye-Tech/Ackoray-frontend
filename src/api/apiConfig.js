@@ -10,7 +10,7 @@ import { getEnvironmentConfig } from '../config/environment.js';
 const envConfig = getEnvironmentConfig();
 const API_BASE_URL = envConfig.API_BASE_URL;
 
-// 图片URL处理函数
+// 图片URL处理函数 - 后端现在返回完整URL，这个函数保留向后兼容
 export const getFullImageUrl = (imageUrl) => {
   if (!imageUrl) return '';
   
@@ -19,7 +19,7 @@ export const getFullImageUrl = (imageUrl) => {
     return imageUrl;
   }
   
-  // 如果是相对路径，拼接完整域名
+  // 如果是相对路径，拼接完整域名（向后兼容）
   if (imageUrl.startsWith('/api/files/')) {
     return `${API_BASE_URL}${imageUrl}`;
   }
