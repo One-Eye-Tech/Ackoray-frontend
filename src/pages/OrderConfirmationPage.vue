@@ -50,15 +50,15 @@
           <div class="summary-totals-confirmation">
             <div class="summary-row-confirmation">
               <span>{{ $t('orderConfirmation.subtotal') }}</span>
-              <span>${{ orderDetails.subtotal.toFixed(2) }}</span>
+              <span>${{ Math.round(orderDetails.subtotal) }}</span>
             </div>
             <div class="summary-row-confirmation">
               <span>{{ $t('orderConfirmation.shipping') }}</span>
-              <span>{{ orderDetails.shipping > 0 ? '$' + orderDetails.shipping.toFixed(2) : $t('orderConfirmation.free') }}</span>
+              <span>{{ orderDetails.shipping > 0 ? '$' + Math.round(orderDetails.shipping) : $t('orderConfirmation.free') }}</span>
             </div>
             <div class="summary-row-confirmation total bold">
               <span>{{ $t('orderConfirmation.total') }}</span>
-              <span>${{ orderDetails.total.toFixed(2) }}</span>
+              <span>${{ Math.round(orderDetails.total) }}</span>
             </div>
           </div>
         </section>

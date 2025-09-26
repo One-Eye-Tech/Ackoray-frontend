@@ -25,7 +25,7 @@
                   <span v-if="item.size">{{ item.size }}</span>
                 </span>
               </div>
-              <span class="item-price">{{ item.price.toFixed(2) }} RMB</span>
+              <span class="item-price">{{ Math.round(item.price) }} RMB</span>
             </div>
             <div class="cart-item-actions">
             <button @click="removeItem(item)" class="remove-item-btn" aria-label="Remove item">

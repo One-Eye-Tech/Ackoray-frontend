@@ -37,10 +37,10 @@ onMounted(async () => {
           id: product.id, // Backend: id
           imageUrl: product.mainImageUrl || '/src/assets/images/placeholder-default.png', // Backend: mainImageUrl
           productNameId: product.name || t('products.defaultName'), // Backend: name
-          priceEth: product.priceR !== undefined && product.priceR !== null ? product.priceR.toFixed(2) : 'N/A', // Backend: priceR, for main display
+          priceEth: product.priceR !== undefined && product.priceR !== null ? Math.round(product.priceR) : 'N/A', // Backend: priceR, for main display
           // Ensure buyNowPriceEth also gets a value to trigger the overlay
           // If backend has a specific buy_now_price field, use that. Otherwise, use priceR.
-          buyNowPriceEth: product.priceR !== undefined && product.priceR !== null ? product.priceR.toFixed(2) : 'N/A', // Backend: priceR (or a specific buy_now_price field)
+          buyNowPriceEth: product.priceR !== undefined && product.priceR !== null ? Math.round(product.priceR) : 'N/A', // Backend: priceR (or a specific buy_now_price field)
           // lastSaleInfo is not currently used based on the screenshot, can be added if needed
         }));
     } else {

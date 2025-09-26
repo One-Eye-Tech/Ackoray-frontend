@@ -64,7 +64,7 @@
     <!-- Box 1.5: New Box to the right -->
     <div class="info-section-box">
       <div class="price-section">
-        <span class="current-price">{{ product.priceR ? product.priceR.toFixed(2) : 'N/A' }}RMB</span>
+        <span class="current-price">{{ product.priceR ? Math.round(product.priceR) : 'N/A' }}</span>
       </div>
     </div>
     
@@ -1061,13 +1061,17 @@ background-color: var(--color-bg);
 }
 
 .price-section { 
-  text-align: left;
+  text-align: center; /* 价格左右居中 */
   margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
 }
 .current-price {
-  font-size: 1.8rem;
+  font-size: 2.5rem;
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--color-primary);
 }
 
 .action-buttons-container {
@@ -1362,6 +1366,8 @@ background-color: var(--color-bg);
 .two-column-layout .info-section-box:last-child {
   flex: 2;
   justify-content: center;
+  border: none; /* 移除web端价格边框 */
+  background-color: transparent; /* 移除web端价格背景色 */
 }
 
 /* 
@@ -1519,7 +1525,7 @@ background-color: var(--color-bg);
 }
   
   .current-price {
-    font-size: 1.15rem; /* 增大价格文字 */
+    font-size: 1.6rem; /* 增大价格文字 */
     font-weight: 600;
   }
   
@@ -1534,7 +1540,7 @@ background-color: var(--color-bg);
   }
   
   .two-column-layout .info-section-box:last-child {
-    padding: 0.8rem 0rem;
+    padding: 0.2rem 0rem;
     border: none; /* 移除价格外边框 */
     background-color: transparent; /* 移除价格背景色 */
   }

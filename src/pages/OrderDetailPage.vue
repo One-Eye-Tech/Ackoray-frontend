@@ -84,19 +84,19 @@
             <h2>{{ $t('orderDetail.orderSummary') }}</h2>
             <div class="summary-item">
               <span>{{ $t('orderDetail.subtotal') }}</span>
-              <span>{{ order.itemsSubtotal.toFixed(2) }} RMB</span>
+              <span>{{ Math.round(order.itemsSubtotal) }} RMB</span>
             </div>
             <div class="summary-item">
               <span>{{ $t('orderDetail.shipping') }}</span>
-              <span>{{ shippingCost.toFixed(2) }} RMB</span>
+              <span>{{ Math.round(shippingCost) }} RMB</span>
             </div>
             <div v-if="discount > 0" class="summary-item">
               <span>{{ $t('orderDetail.discount') }}</span>
-              <span>-{{ discount.toFixed(2) }} RMB</span>
+              <span>-{{ Math.round(discount) }} RMB</span>
             </div>
             <div class="summary-item total-line">
               <span>{{ $t('orderDetail.total') }}</span>
-              <span>{{ order.totalAmount.toFixed(2) }} RMB</span>
+              <span>{{ Math.round(order.totalAmount) }} RMB</span>
             </div>
           </section>
 

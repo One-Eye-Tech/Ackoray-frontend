@@ -31,7 +31,7 @@
                     </p>
                     <p class="item-quantity">{{ $t('checkout.quantity') }}: {{ item.quantity }}</p>
                   </div>
-                  <p class="item-price">{{ (item.price * item.quantity).toFixed(2) }}RMB</p>
+                  <p class="item-price">{{ Math.round(item.price * item.quantity) }}RMB</p>
                 </div>
               </div>
             </div>
@@ -110,15 +110,15 @@
               <div class="totals-summary">
                 <div class="summary-row">
                   <span>{{ $t('checkout.shipping') }}</span>
-                  <span>{{ shippingCost > 0 ? '$ ' + shippingCost.toFixed(2) : $t('checkout.free') }}</span>
+                  <span>{{ shippingCost > 0 ? '$ ' + Math.round(shippingCost) : $t('checkout.free') }}</span>
                 </div>
                 <div class="summary-row">
                   <span>{{ $t('checkout.subtotal') }}</span>
-                  <span>{{ orderSubtotal.toFixed(2) }} RMB</span>
+                  <span>{{ Math.round(orderSubtotal) }} RMB</span>
                 </div>
                 <div class="summary-row total">
                   <span>{{ $t('checkout.total') }}</span>
-                  <span>{{ orderTotal.toFixed(2) }} RMB</span>
+                  <span>{{ Math.round(orderTotal) }} RMB</span>
                 </div>
               </div>
             </div>

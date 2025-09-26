@@ -98,19 +98,19 @@
             <h2>订单总览</h2>
             <div class="summary-item">
               <span>商品小计 ({{ order.orderItems.length }} 件)</span>
-              <span>{{ order.itemsSubtotal.toFixed(2) }}￥</span>
+              <span>{{ Math.round(order.itemsSubtotal) }}￥</span>
             </div>
             <div class="summary-item">
               <span>运费</span>
-              <span>0.00￥</span> <!-- Admin side might also have fixed shipping cost or display 0 -->
+              <span>0￥</span> <!-- Admin side might also have fixed shipping cost or display 0 -->
             </div>
             <div v-if="discount > 0" class="summary-item">
               <span>折扣</span>
-              <span>-{{ discount.toFixed(2) }}￥</span>
+              <span>-{{ Math.round(discount) }}￥</span>
             </div>
             <div class="summary-item total-line">
               <span>订单总计</span>
-              <span>{{ order.totalAmount.toFixed(2) }}￥</span>
+              <span>{{ Math.round(order.totalAmount) }}￥</span>
             </div>
           </section>
         </div>
@@ -124,7 +124,7 @@
                 <p class="item-name">{{ item.productName }}</p>
                 <p class="item-qty-price">{{ item.color || '默认' }} / {{ item.size || '默认' }} / x{{ item.quantity }}</p>
               </div>
-              <p class="item-total-price">{{ (item.quantity * item.priceAtPurchase).toFixed(2) }}￥</p>
+              <p class="item-total-price">{{ Math.round(item.quantity * item.priceAtPurchase) }}￥</p>
             </li>
           </ul>
         </section>
