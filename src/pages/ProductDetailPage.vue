@@ -64,10 +64,38 @@
     <!-- Box 1.5: New Box to the right -->
     <div class="info-section-box">
       <div class="price-section">
-        <span class="current-price">{{ product.priceR ? product.priceR.toFixed(2) : 'N/A' }} RMB</span>
+        <span class="current-price">{{ product.priceR ? product.priceR.toFixed(2) : 'N/A' }}RMB</span>
       </div>
     </div>
     
+  </div>
+
+    <!-- Box 5: Selectors -->
+  <div class="info-section-box">
+    <div class="color-selector section">
+      <span class="selector-label">{{ t('product.colorLabel', '颜色') }} - {{ selectedColor ? selectedColor.name : t('product.selectColorPrompt', '请选择颜色') }}</span>
+    </div>
+    
+    <hr class="card-divider">
+
+    <div class="size-selector section">
+      <span class="selector-label">{{ t('product.sizeLabel', '尺码') }} - {{ selectedSize ? selectedSize.name : t('product.selectSizePrompt', '请选择尺码') }}</span>
+      <div class="size-buttons">
+        <button
+          v-for="size in availableSizes"
+          :key="size.id"
+          class="size-btn"
+          :class="{ 
+            selected: selectedSize && selectedSize.id === size.id, 
+            disabled: !getVariantStock(size.id).available 
+          }"
+          @click="getVariantStock(size.id).available ? selectSize(size) : null"
+          :disabled="!getVariantStock(size.id).available"
+        >
+          {{ size.name }}
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- Box 2: Product Description -->
@@ -124,33 +152,6 @@
     </div>
   </div>
   
-  <!-- Box 5: Selectors -->
-  <div class="info-section-box">
-    <div class="color-selector section">
-      <span class="selector-label">{{ t('product.colorLabel', '颜色') }} - {{ selectedColor ? selectedColor.name : t('product.selectColorPrompt', '请选择颜色') }}</span>
-    </div>
-    
-    <hr class="card-divider">
-
-    <div class="size-selector section">
-      <span class="selector-label">{{ t('product.sizeLabel', '尺码') }} - {{ selectedSize ? selectedSize.name : t('product.selectSizePrompt', '请选择尺码') }}</span>
-      <div class="size-buttons">
-        <button
-          v-for="size in availableSizes"
-          :key="size.id"
-          class="size-btn"
-          :class="{ 
-            selected: selectedSize && selectedSize.id === size.id, 
-            disabled: !getVariantStock(size.id).available 
-          }"
-          @click="getVariantStock(size.id).available ? selectSize(size) : null"
-          :disabled="!getVariantStock(size.id).available"
-        >
-          {{ size.name }}
-        </button>
-      </div>
-    </div>
-  </div>
 
   <!-- Box 6: Actions & Price -->
   <div class="info-section-box actions-box">
@@ -1499,10 +1500,27 @@ background-color: var(--color-bg);
   .product-title {
     font-size: 1rem;
     font-weight: 500;
+    text-align: center; /* 产品名称居中显示 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
   }
+
+  /* 第一个边框（标题）的比例 */
+.two-column-layout .info-section-box:first-child {
+  flex: 7;
+}
+
+/* 第二个边框（价格）的比例和水平居中 */
+.two-column-layout .info-section-box:last-child {
+  flex: 3;
+  justify-content: center;
+}
   
   .current-price {
-    font-size: 0.8rem;
+    font-size: 1.15rem; /* 增大价格文字 */
+    font-weight: 600;
   }
   
   /* 移动端调整所有信息框的内边距 */
@@ -1512,15 +1530,17 @@ background-color: var(--color-bg);
 
   /* 移动端调整产品名称和价格边框 */
   .two-column-layout .info-section-box:first-child {
-    padding: 0.8rem 0.8rem;
+    padding: 0.8rem 0.2rem; /* 缩小产品名称的左右内边距 */
   }
   
   .two-column-layout .info-section-box:last-child {
-    padding: 0.8rem 0.65rem;
+    padding: 0.8rem 0rem;
+    border: none; /* 移除价格外边框 */
+    background-color: transparent; /* 移除价格背景色 */
   }
 
   .two-column-layout {
-    gap: 0.6rem;
+    gap: 0.4rem;
   }
   
   /* 移动端确保价格和单位在一行显示 */
@@ -1532,6 +1552,12 @@ background-color: var(--color-bg);
   .two-column-layout .current-price {
     display: inline-block;
     white-space: nowrap;
+  }
+
+    /* 移动端按钮高度与尺码选择器保持一致 */
+  .btn {
+    padding: 0.9rem 0.8rem; /* 与尺码按钮相同的高度 */
+    font-size: 1rem;
   }
 
   

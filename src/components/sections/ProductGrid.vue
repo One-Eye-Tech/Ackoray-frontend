@@ -36,7 +36,7 @@ defineProps({
 @media (max-aspect-ratio: 1/1) {
   .product-grid-container {
     grid-template-columns: repeat(2, 1fr);
-    gap: 0.6rem;
+    gap: 0.6rem; /* 缩小产品卡片之间的间距 */
     margin-top: -0.2rem;
   }
 }

@@ -171,28 +171,33 @@ const defaultImage = 'https://via.placeholder.com/200x200.png?text=Product';
 /* 移动端样式优化 */
 @media (max-aspect-ratio: 1/1) {
   .info-container {
-    padding: 0.7rem 0.5rem 0.5rem 0.5rem;
+    padding: 0.7rem 0.2rem 0.5rem 0.2rem; /* 缩小左右内边距 */
     height: 3.1rem;
   }
   
   .product-name-id {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     line-height: 1;
-    margin-bottom: 0.1rem;
     font-weight: 500;
   }
   
   .price-eth {
     font-size: 0.7rem;
-    font-weight: 600;
-    margin-top: 0;
+    font-weight: 700;
+    letter-spacing: -0.03rem;
   }
   
   .card-content-wrapper {
     box-shadow: none;
     border-radius: var(--border-radius-medium);
+    border: none; /* 移除移动端描边 */
     width: 100%;
     margin-right: -1rem;
+  }
+  
+  /* 移动端图片添加底部圆角 */
+  .product-image {
+    border-radius: var(--border-radius-medium);
   }
   
   /* 移动端禁用悬浮效果 */

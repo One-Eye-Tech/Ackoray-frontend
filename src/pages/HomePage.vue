@@ -98,7 +98,7 @@ onMounted(async () => {
     font-size: 1.1rem;
     font-weight: 500;
     color: var(--color-text);
-    margin: -2.8rem 0 1rem 0;
+    margin: 0rem 0 1rem 0;
     padding: 0;
     text-align: left;
   }

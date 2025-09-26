@@ -161,26 +161,8 @@ const logoImageUrl = logoImage;
 }
 
 @media (max-aspect-ratio: 1/1) {
+    /* 移动端完全隐藏整个 Hero 组件 */
     .hero-section {
-      aspect-ratio: 1/1;
-      max-height: 50vh;
-      margin: 15px 15px;
-      border-radius: 0.5rem;
-      box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
-      
-    }
-    
-    /* 移动端隐藏桌面图片，显示移动端图片 */
-    .desktop-image {
-      display: none;
-    }
-    
-    .mobile-image {
-      display: block;
-    }
-    
-    /* 移动端隐藏内容覆盖层 */
-    .content-overlay {
       display: none;
     }
 }
