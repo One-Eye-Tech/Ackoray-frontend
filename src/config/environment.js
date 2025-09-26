@@ -6,10 +6,9 @@
 
 // 生产环境配置
 const PRODUCTION_CONFIG = {
-  // 阿里云服务器地址 - 通过反向代理访问（端口80）
-  // Nginx反向代理：80端口 -> 后端8081端口
-  // 临时使用HTTP，后续可升级为HTTPS
-  API_BASE_URL: 'http://8.133.19.226:8081',
+  // 使用HTTPS子域名访问（SSL证书已配置）
+  // 完美解决GitHub Pages Mixed Content问题
+  API_BASE_URL: 'https://ackoray.teetee.com.cn',
   
   ENVIRONMENT: 'production'
 };
