@@ -1,8 +1,7 @@
 /**
  * 密码相关API服务
  */
-import { post } from './httpClient';
-import { PASSWORD_API } from './apiConfig';
+import apiClient, { PASSWORD_API } from './apiConfig';
 
 /**
  * 发送密码重置验证码
@@ -20,8 +19,8 @@ export const sendPasswordResetCode = async (email) => {
     const cleanedEmail = email.trim();
     console.log('发送密码重置验证码，参数:', { email: cleanedEmail });
     
-    const response = await post(PASSWORD_API.RESET_CODE, { email: cleanedEmail }, false);
-    return response;
+    const response = await apiClient.post(PASSWORD_API.RESET_CODE, { email: cleanedEmail });
+    return response.data;
   } catch (error) {
     console.error('发送密码重置验证码失败:', error.message || '未知错误');
     throw error;
@@ -45,11 +44,11 @@ export const resendPasswordResetCode = async (email) => {
     // 确保参数格式正确
     console.log('发送重置密码验证码请求，参数:', { email: cleanedEmail });
     
-    const response = await post(PASSWORD_API.RESEND_CODE, { 
+    const response = await apiClient.post(PASSWORD_API.RESEND_CODE, { 
       email: cleanedEmail 
-    }, false);
+    });
     
-    return response;
+    return response.data;
   } catch (error) {
     console.error('重新发送密码重置验证码失败:', error.message || '未知错误');
     throw error;
@@ -80,13 +79,13 @@ export const verifyPasswordResetCode = async (email, code) => {
       code: strCode 
     });
     
-    const response = await post(PASSWORD_API.VERIFY_CODE, { 
+    const response = await apiClient.post(PASSWORD_API.VERIFY_CODE, { 
       email: cleanedEmail, 
       code: strCode 
-    }, false);
+    });
     
-    console.log('验证码验证响应:', response);
-    return response;
+    console.log('验证码验证响应:', response.data);
+    return response.data;
   } catch (error) {
     console.error('验证密码重置验证码失败:', error.message || '未知错误');
     throw error;
@@ -102,12 +101,12 @@ export const verifyPasswordResetCode = async (email, code) => {
  */
 export const changePassword = async (email, code, newPassword) => {
   try {
-    const response = await post(PASSWORD_API.CHANGE, {
+    const response = await apiClient.post(PASSWORD_API.CHANGE, {
       email,
       code,
       newPassword
-    }, false);
-    return response;
+    });
+    return response.data;
   } catch (error) {
     console.error('修改密码失败:', error.message || '未知错误');
     throw error;

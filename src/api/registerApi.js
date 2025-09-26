@@ -1,8 +1,7 @@
 /**
  * 注册相关API服务
  */
-import httpClient from './httpClient';
-import { REGISTER_API } from './apiConfig';
+import apiClient, { REGISTER_API } from './apiConfig';
 
 /**
  * 发送注册验证码
@@ -12,13 +11,13 @@ import { REGISTER_API } from './apiConfig';
  */
 export const sendVerificationCode = async (email, password) => {
   try {
-    const response = await httpClient.post('/api/register/send-code', {
+    const response = await apiClient.post(REGISTER_API.SEND_CODE, {
       email,
       password,
-    }, false);
-    return response;
+    });
+    return response.data;
   } catch (error) {
-    console.error('Error sending verification code:', error.message || 'Unknown error');
+    console.error('Error sending verification code:', error);
     throw error;
   }
 };
@@ -31,14 +30,14 @@ export const sendVerificationCode = async (email, password) => {
  */
 export const verifyCodeAndRegister = async (email, code) => {
   try {
-    const response = await httpClient.post('/api/register/verify-code', {
+    const response = await apiClient.post(REGISTER_API.VERIFY_CODE, {
       email,
       code,
-    }, false);
-    return response;
+    });
+    return response.data;
   } catch (error) {
-    console.error('Error verifying code and registering:', error.response ? error.response.data : error.message);
-    return error.response ? error.response.data : { success: false, message: 'Verification failed or server error' };
+    console.error('Error verifying code and registering:', error);
+    return error.response?.data || { success: false, message: 'Verification failed or server error' };
   }
 };
 
@@ -51,13 +50,13 @@ export const resendVerificationCodeByEmail = async (email) => {
   try {
     // This might point to a different backend endpoint if it's specifically for password resets
     // For now, assuming it might re-use or be a simplified version if backend handles it by email only
-    const response = await httpClient.post('/api/register/resend-code-by-email', {
+    const response = await apiClient.post('/register/resend-code-by-email', {
       email,
-    }, false);
-    return response;
+    });
+    return response.data;
   } catch (error) {
-    console.error('Error resending verification code by email:', error.response ? error.response.data : error.message);
-    return error.response ? error.response.data : { success: false, message: 'Failed to resend code' };
+    console.error('Error resending verification code by email:', error);
+    return error.response?.data || { success: false, message: 'Failed to resend code' };
   }
 };
 

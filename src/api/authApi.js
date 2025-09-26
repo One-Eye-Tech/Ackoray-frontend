@@ -1,8 +1,7 @@
 /**
  * 认证相关API服务
  */
-import { post, get } from './httpClient';
-import { AUTH_API } from './apiConfig';
+import apiClient, { AUTH_API } from './apiConfig';
 
 // 获取存储的令牌
 export function getAuthToken() {
@@ -75,16 +74,14 @@ export function getCurrentUser() {
 // 登录API
 export async function login(email, password, rememberMe = false) {
   try {
-    // 使用httpClient发送POST请求，无需认证
-    const data = await post(
-      AUTH_API.LOGIN,
-      {
-        email,
-        password,
-        rememberMe,
-      },
-      false // 不需要认证
-    );
+    // 使用axios发送POST请求，无需认证
+    const response = await apiClient.post(AUTH_API.LOGIN, {
+      email,
+      password,
+      rememberMe,
+    });
+    
+    const data = response.data;
     
     // 存储认证信息
     setAuth(data.token, data.tokenType, data.user, data.expiresIn);
@@ -94,13 +91,19 @@ export async function login(email, password, rememberMe = false) {
       user: data.user,
     };
   } catch (error) {
-    console.error('登录请求失败:', error.message);
+    console.error('登录请求失败:', error);
     
-    // 从httpClient.js返回的错误中获取消息
-    // 这里保留原始错误信息，可能包括后端抛出的"用户不存在"等业务错误
+    // 从axios错误中获取消息
+    let message = '登录失败，请稍后再试';
+    if (error.response?.data?.message) {
+      message = error.response.data.message;
+    } else if (error.message) {
+      message = error.message;
+    }
+    
     return {
       success: false,
-      message: error.message,
+      message: message,
     };
   }
 }
@@ -108,8 +111,9 @@ export async function login(email, password, rememberMe = false) {
 // 验证令牌API
 export async function validateToken(token) {
   try {
-    // 使用httpClient发送GET请求，不需要自动添加认证头
-    return await get(`${AUTH_API.VALIDATE}?token=${encodeURIComponent(token)}`, false);
+    // 使用axios发送GET请求，不需要自动添加认证头
+    const response = await apiClient.get(`${AUTH_API.VALIDATE}?token=${encodeURIComponent(token)}`);
+    return response.data;
   } catch (error) {
     console.error('验证令牌出错:', error);
     return false;

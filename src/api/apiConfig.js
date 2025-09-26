@@ -179,31 +179,31 @@ export const REGISTER_API = {
 
 // 密码相关API路径
 export const PASSWORD_API = {
-  RESET_CODE: `/api/password/reset-code`,
-  RESEND_CODE: `/api/password/resend-code`,
-  VERIFY_CODE: `/api/password/verify-code`,
-  CHANGE: `/api/password/change`,
+  RESET_CODE: `/password/reset-code`,
+  RESEND_CODE: `/password/resend-code`,
+  VERIFY_CODE: `/password/verify-code`,
+  CHANGE: `/password/change`,
 };
 
 // 用户相关API路径
 export const USER_API = {
-  PROFILE: `/api/users/profile`,
-  UPDATE: `/api/users/update`,
+  PROFILE: `/users/profile`,
+  UPDATE: `/users/update`,
 };
 
 // 商品相关API路径
 export const PRODUCT_API = {
-  LIST: `/api/products`,
-  DETAIL: `/api/products/{id}`,
-  UPLOAD_IMAGE: `/api/products/images/upload-unassigned`,
+  LIST: `/products`,
+  DETAIL: `/products/{id}`,
+  UPLOAD_IMAGE: `/products/images/upload-unassigned`,
 };
 
 // 订单相关API路径
 export const ORDER_API = {
-  CREATE: `/api/orders`,
-  LIST: `/api/orders`,
-  DETAIL: `/api/orders/{id}`,
-  UPDATE_STATUS: `/api/orders/{id}/status`,
+  CREATE: `/orders`,
+  LIST: `/orders`,
+  DETAIL: `/orders/{id}`,
+  UPDATE_STATUS: `/orders/{id}/status`,
 };
 
 export default apiClient; 
