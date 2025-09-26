@@ -21,7 +21,7 @@
               </div>
               <div v-else class="checkout-items-list">
                 <div v-for="item in displayItems" :key="`${item.id}-${item.color}-${item.size}`" class="checkout-item">
-                  <img :src="item.imageUrl || '/src/assets/images/placeholder-product.png'" :alt="item.name" class="item-image">
+                  <img :src="getFullImageUrl(item.imageUrl) || '/src/assets/images/placeholder-product.png'" :alt="item.name" class="item-image">
                   <div class="item-details">
                     <p class="item-name">{{ item.name }}</p>
                     <p class="item-attributes" v-if="item.color || item.size">
@@ -293,16 +293,6 @@
         </div>
       </div>
 
-      <!-- Abandon Payment Confirmation Modal -->
-      <div v-if="showAbandonPaymentConfirmModal" class="modal-overlay" @click.self="handleCancelAbandonPayment">
-        <div class="modal-panel abandon-confirm-panel">
-          <h3 class="modal-title abandon-title">{{ $t('checkout.confirmAbandonPayment') }}</h3>
-          <div class="modal-actions abandon-actions">
-            <button type="button" class="btn btn-secondary btn-abandon-action" @click="handleConfirmAbandonPayment">{{ $t('checkout.abandon') }}</button>
-            <button type="button" class="btn btn-primary btn-abandon-action" @click="handleCancelAbandonPayment">{{ $t('checkout.continuePayment') }}</button>
-          </div>
-        </div>
-      </div>
     </main>
     <!-- <Footer /> -->
   </div>
@@ -320,6 +310,7 @@ import areas from '../assets/address/areas.json';
 import addressApi from '../api/addressApi';
 import { createOrder, cancelOrder, getOrderStatusByNumber, createOrderWithPayment } from '../api/orderApi';
 import { createPayment, pollPaymentStatus, generateOrderNumber } from '../api/paymentApi';
+import { getFullImageUrl } from '../api/apiConfig.js';
 import QRCode from 'qrcode';
 
 // 静态资源导入
@@ -373,8 +364,6 @@ const paymentTimerId = ref(null);
 const paymentTimeRemaining = ref(0); // in seconds
 const pollingIntervalId = ref(null);
 
-// Abandon Payment Confirmation Modal State
-const showAbandonPaymentConfirmModal = ref(false);
 const paymentAbandonedButCanResume = ref(false);
 
 const formattedTimeRemaining = computed(() => {
@@ -858,21 +847,14 @@ const prepareAndNavigateToConfirmation = () => {
 };
 
 const promptToAbandonPayment = () => {
-  showAbandonPaymentConfirmModal.value = true;
-};
-
-const handleConfirmAbandonPayment = () => {
-  showAbandonPaymentConfirmModal.value = false;
-  showQrCodeModal.value = false; // 隐藏 QR modal，但计时器继续运行
-
-  paymentAbandonedButCanResume.value = true; // 标记为可恢复
-  console.log('[CheckoutPage] Payment abandoned by user, can resume. Remaining time (sec):', paymentTimeRemaining.value);
-  // 计时器会继续在后台运行
-};
-
-const handleCancelAbandonPayment = () => {
-  showAbandonPaymentConfirmModal.value = false;
-  // QR modal 保持打开，计时器继续
+  // 使用浏览器原生确认对话框
+  if (confirm('确认放弃支付码？')) {
+    showQrCodeModal.value = false; // 隐藏 QR modal，但计时器继续运行
+    paymentAbandonedButCanResume.value = true; // 标记为可恢复
+    console.log('[CheckoutPage] Payment abandoned by user, can resume. Remaining time (sec):', paymentTimeRemaining.value);
+    // 计时器会继续在后台运行
+  }
+  // 如果用户点击取消，则什么都不做，QR modal 保持打开
 };
 
 onMounted(async () => {

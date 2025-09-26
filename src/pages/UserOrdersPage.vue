@@ -48,7 +48,7 @@
           </div>
           <div class="order-card-body">
             <div class="order-items-preview">
-              <img v-for="item in order.orderItems.slice(0, 3)" :key="item.productId" :src="item.productImageUrl || '/src/assets/images/placeholder-product.png'" :alt="item.productName" class="item-thumbnail">
+              <img v-for="item in order.orderItems.slice(0, 3)" :key="item.productId" :src="getFullImageUrl(item.productImageUrl) || '/src/assets/images/placeholder-product.png'" :alt="item.productName" class="item-thumbnail">
               <span v-if="order.orderItems.length > 3" class="more-items-indicator">+{{ order.orderItems.length - 3 }} {{ $t('userOrders.moreItems') }}</span>
             </div>
             <div class="order-summary">
@@ -97,6 +97,7 @@ import TopNavigationBar from '../components/layout/TopNavigationBar.vue';
 import Footer from '../components/layout/Footer.vue';
 import { useRouter } from 'vue-router';
 import { getOrdersByUserId, updateOrderStatus } from '../api/orderApi';
+import { getFullImageUrl } from '../api/apiConfig.js';
 
 const router = useRouter();
 const { t } = useI18n();

@@ -111,7 +111,7 @@
           <h2>{{ $t('orderDetail.itemsInOrder') }}</h2>
           <ul class="order-items-list">
             <li v-for="item in order.orderItems" :key="item.productId" class="order-item">
-              <img :src="item.productImageUrl || '/src/assets/images/placeholder-product.png'" :alt="item.productName" class="item-image">
+              <img :src="getFullImageUrl(item.productImageUrl) || '/src/assets/images/placeholder-product.png'" :alt="item.productName" class="item-image">
               <div class="item-info">
                 <p class="item-name">{{ item.productName }}</p>
                 <p class="item-qty-price">{{ item.color || '默认' }} / {{ item.size || '默认' }} / x{{ item.quantity }}</p>
@@ -172,6 +172,7 @@ import { useI18n } from 'vue-i18n';
 import TopNavigationBar from '../components/layout/TopNavigationBar.vue';
 import Footer from '../components/layout/Footer.vue';
 import { getOrderById, updateOrderStatus } from '../api/orderApi';
+import { getFullImageUrl } from '../api/apiConfig.js';
 
 const route = useRoute();
 const router = useRouter();
