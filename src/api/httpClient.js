@@ -3,18 +3,11 @@
  */
 import { getAuthHeader, clearAuth, isTokenExpired } from './authApi';
 
-// 动态获取API基础URL，支持移动端访问
-const getApiBaseUrl = () => {
-  // 如果是开发环境且在移动设备上访问（通过IP访问）
-  if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-    // 使用相同的主机名但不同的端口
-    return `http://${window.location.hostname}:8080`;
-  }
-  // 默认开发环境
-  return 'http://localhost:8080';
-};
+import { getEnvironmentConfig } from '../config/environment.js';
 
-const API_BASE_URL = getApiBaseUrl(); // 后端API的基础URL
+// 使用统一的环境配置
+const envConfig = getEnvironmentConfig();
+const API_BASE_URL = envConfig.API_BASE_URL; // 后端API的基础URL
 
 /**
  * 发送HTTP请求的通用函数
