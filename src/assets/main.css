@@ -1,0 +1,189 @@
+:root {
+  /* ===== 品牌色彩 ===== */
+  --color-primary: #5433EB;
+  --color-primary-hover: #4229C7;
+  --color-accent: #007bff;
+  --color-accent-hover: #0056b3;
+  --color-accent-rgb: 0, 123, 255;
+  
+  /* ===== 状态色彩 ===== */
+  --color-positive: #52C41A;      /* 绿色，用于正向变化 */
+  --color-negative: #FF4D4F;      /* 红色，用于负向变化 */
+  --color-warning: #FAAD14;       /* 警告色 */
+  --color-info: #1890FF;          /* 信息色 */
+
+  /* ===== 字体设置 ===== */
+  --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-size-base: 16px;
+  --line-height-base: 1.5;
+
+  /* ===== 圆角设置 ===== */
+  --border-radius-small: 4px;
+  --border-radius-medium: 8px;
+  --border-radius-large: 12px;
+  --border-radius-xlarge: 16px;
+
+  /* ===== 布局设置 ===== */
+  --container-max-width: 1200px;
+  --container-padding: 1.5rem;
+  --section-spacing: 2.5rem;
+  --navbar-height: 50px;
+
+  /* ===== 默认浅色主题 ===== */
+  --color-bg: #FFFFFF;
+  --color-surface: #E3E5E8;
+  --color-card: #FFFFFF;
+  --color-text: #060607;
+  --color-text-secondary: #6A7480;
+  --color-text-muted: #ADB5BD;
+  --color-border: #EBEBEC;
+  --color-border-subtle: #E9ECEF;
+  --color-border-strong: #ADB5BD;
+  --color-icon: #4F5660;
+  --color-topbar: #FFFFFF;
+  --color-bottombar: #F8F9FA;
+  
+  /* ===== 按钮色彩 ===== */
+  --color-button-primary: var(--color-primary);
+  --color-button-primary-hover: var(--color-primary-hover);
+  --color-button-primary-text: #FFFFFF;
+  --color-button-secondary: #F8F9FA;
+  --color-button-secondary-hover: #E9ECEF;
+  --color-button-secondary-text: #495057;
+  
+  /* ===== 兼容旧变量名 ===== */
+  --color-background: var(--color-bg);
+  --color-background-page: var(--color-bg);
+  --color-background-mute: var(--color-surface);
+  --color-background-card: var(--color-card);
+  --color-background-tag: var(--color-surface);
+  --color-background-button-secondary: var(--color-button-secondary);
+  --color-background-button-secondary-hover: var(--color-button-secondary-hover);
+  --color-text-primary: var(--color-text);
+  --color-button-text-primary: var(--color-button-primary-text);
+  --color-card-bg: var(--color-card);
+}
+
+/* ===== 暗色主题 ===== */
+:root[data-theme="dark"] {
+  --color-bg: #36393F;
+  --color-surface: #2F3136;
+  --color-card: #40444B;
+  --color-text: #FFFFFF;
+  --color-text-secondary: #B9BBBE;
+  --color-text-muted: #72767D;
+  --color-border: #42454A;
+  --color-border-subtle: #3C3F44;
+  --color-border-strong: #4F545C;
+  --color-icon: #B9BBBE;
+  --color-topbar: #2F3136;
+  --color-bottombar: #2F3136;
+  
+  /* 暗色主题按钮色彩 */
+  --color-button-secondary: #4F545C;
+  --color-button-secondary-hover: #5D6269;
+  --color-button-secondary-text: #FFFFFF;
+}
+
+/* ===== 浅色主题（显式定义） ===== */
+:root[data-theme="light"] {
+  --color-bg: #FFFFFF;
+  --color-surface: #E3E5E8;
+  --color-card: #FFFFFF;
+  --color-text: #060607;
+  --color-text-secondary: #6A7480;
+  --color-text-muted: #ADB5BD;
+  --color-border: #EBEBEC;
+  --color-border-subtle: #E9ECEF;
+  --color-border-strong: #ADB5BD;
+  --color-icon: #4F5660;
+  --color-topbar: #FFFFFF;
+  --color-bottombar: #F8F9FA;
+  
+  /* 浅色主题按钮色彩 */
+  --color-button-secondary: #F8F9FA;
+  --color-button-secondary-hover: #E9ECEF;
+  --color-button-secondary-text: #495057;
+}
+
+/* 基本重置 */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-family-base);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  min-height: 100vh;
+  text-rendering: optimizeLegibility;
+}
+
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+
+input, button, textarea, select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* 响应式字体大小辅助 */
+.text-xs { font-size: 0.75rem; } /* 12px */
+.text-sm { font-size: 0.875rem; } /* 14px */
+.text-base { font-size: 1rem; } /* 16px */
+.text-lg { font-size: 1.125rem; } /* 18px */
+.text-xl { font-size: 1.25rem; } /* 20px */
+.text-2xl { font-size: 1.5rem; } /* 24px */
+.text-3xl { font-size: 1.875rem; } /* 30px */
+.text-4xl { font-size: 2.25rem; } /* 36px */
+.text-5xl { font-size: 3rem; } /* 48px */
+
+/* 辅助类 */
+.container {
+  width: 100%;
+  max-width: var(--container-max-width); /* Now 1200px */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--container-padding);
+  padding-right: var(--container-padding);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+} 
