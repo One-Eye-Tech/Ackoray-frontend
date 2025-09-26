@@ -167,14 +167,14 @@ export const convertImageToBase64 = (file) => {
 
 // 认证相关API路径
 export const AUTH_API = {
-  LOGIN: `/api/auth/login`,
-  VALIDATE: `/api/auth/validate`,
+  LOGIN: `/auth/login`,
+  VALIDATE: `/auth/validate`,
 };
 
 // 注册相关API路径
 export const REGISTER_API = {
-  SEND_CODE: `/api/register/send-code`,
-  VERIFY_CODE: `/api/register/verify-code`,
+  SEND_CODE: `/register/send-code`,
+  VERIFY_CODE: `/register/verify-code`,
 };
 
 // 密码相关API路径
