@@ -3,7 +3,7 @@
     <div class="product-item-card">
       <div class="card-content-wrapper">
         <div class="image-container">
-          <img :src="imageUrl || defaultImage" :alt="productNameId" class="product-image" />
+          <img :src="getFullImageUrl(imageUrl) || defaultImage" :alt="productNameId" class="product-image" />
         </div>
         <div class="info-container">
           <h4 class="product-name-id">{{ productNameId }}</h4>
@@ -21,6 +21,7 @@
 <script setup>
 import { defineProps, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { getFullImageUrl } from '../../api/apiConfig.js';
 
 const { t } = useI18n();
 

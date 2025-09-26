@@ -22,7 +22,7 @@
             <img
               v-for="image in product.images"
                :key="image.id"
-               :src="image.imageUrl"
+               :src="getFullImageUrl(image.imageUrl)"
                :alt="`${product.name} thumbnail`"
                class="thumbnail-image"
                :class="{ active: product.images[currentImageIndex]?.id === image.id }"
@@ -47,7 +47,7 @@
             @mouseup="handleMouseUp"
             @mouseleave="handleMouseLeave"
           >
-            <img :src="currentSelectedImageUrl || defaultImageUrl" :alt="product.name || '产品图片'" class="main-product-image" @click="openImageZoom"/>
+            <img :src="getFullImageUrl(currentSelectedImageUrl) || defaultImageUrl" :alt="product.name || '产品图片'" class="main-product-image" @click="openImageZoom"/>
           </div>
         </div>
 
@@ -227,6 +227,7 @@ import ArrowLeftIcon from '../assets/icons/ArrowLeftIcon.vue';
 import ArrowRightIcon from '../assets/icons/ArrowRightIcon.vue';
 import { getProductByIdApi } from '../api/productApi';
 import { isLoggedIn } from '../api/authApi';
+import { getFullImageUrl } from '../api/apiConfig.js';
 
 // 静态资源导入
 import productInfoImage from '../assets/images/cp1.png';

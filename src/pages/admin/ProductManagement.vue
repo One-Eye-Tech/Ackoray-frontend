@@ -26,7 +26,7 @@
         <tr v-for="product in filteredProducts" :key="product.id">
           <td>{{ product.id }}</td>
           <td>
-            <img :src="product.mainImageUrl || defaultProductImage" alt="主图" class="table-product-image">
+            <img :src="getFullImageUrl(product.mainImageUrl) || defaultProductImage" alt="主图" class="table-product-image">
           </td>
           <td>{{ product.name }}</td>
           <td>¥{{ product.priceR ? product.priceR.toFixed(2) : '0.00' }}</td>
@@ -91,7 +91,7 @@
             <label for="mainImage">主图</label>
             <input type="file" id="mainImage" @change="handleMainImageUpload" accept="image/*">
             <div v-if="mainImagePreview" class="image-preview-container">
-              <img :src="mainImagePreview" alt="主图预览" class="image-preview">
+              <img :src="getFullImageUrl(mainImagePreview)" alt="主图预览" class="image-preview">
             </div>
           </div>
 
@@ -100,7 +100,7 @@
             <input type="file" id="otherImages" @change="handleOtherImagesUpload" accept="image/*" multiple>
             <div class="other-images-preview-container">
               <div v-for="(src, index) in combinedOtherImagesPreview" :key="index" class="image-preview-item">
-                <img :src="src" alt="图片预览" class="image-preview">
+                <img :src="getFullImageUrl(src)" alt="图片预览" class="image-preview">
                 <button type="button" @click="removeOtherImage(index)" class="btn-remove-image">&times;</button>
               </div>
             </div>
@@ -232,6 +232,7 @@ import {
   deleteProduct as deleteProductApi,
   updateProductStatus
 } from '../../api/productApi'; // 导入API方法
+import { getFullImageUrl } from '../../api/apiConfig.js';
 // Removed ConfirmationModal import - now using native browser confirm dialogs
 
 const defaultProductImage = 'https://via.placeholder.com/60x60.png?text=Img'; // 默认占位图

@@ -10,6 +10,23 @@ import { getEnvironmentConfig } from '../config/environment.js';
 const envConfig = getEnvironmentConfig();
 const API_BASE_URL = envConfig.API_BASE_URL;
 
+// 图片URL处理函数
+export const getFullImageUrl = (imageUrl) => {
+  if (!imageUrl) return '';
+  
+  // 如果已经是完整URL，直接返回
+  if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+    return imageUrl;
+  }
+  
+  // 如果是相对路径，拼接完整域名
+  if (imageUrl.startsWith('/api/files/')) {
+    return `${API_BASE_URL}${imageUrl}`;
+  }
+  
+  return imageUrl;
+};
+
 // 创建统一的axios实例
 const apiClient = axios.create({
   baseURL: `${API_BASE_URL}/api`,
