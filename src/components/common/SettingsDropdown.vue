@@ -53,18 +53,24 @@ const toggleLanguage = () => {
 };
 
 const openPrivacyPolicy = () => {
-  // 这里可以添加打开隐私政策页面的逻辑
+  // 打开隐私政策页面
   console.log('Opening privacy policy');
-  // 可以打开新窗口或者跳转到隐私政策页面
-  window.open('/privacy-policy', '_blank');
+  // 根据环境动态构建URL
+  const baseUrl = window.location.hostname === 'one-eye-tech.github.io' 
+    ? 'https://one-eye-tech.github.io/ackoray-frontend' 
+    : '';
+  window.open(`${baseUrl}/url/privacy.html`, '_blank');
   emit('close');
 };
 
 const openUserAgreement = () => {
-  // 这里可以添加打开用户协议页面的逻辑
+  // 打开用户协议页面
   console.log('Opening user agreement');
-  // 可以打开新窗口或者跳转到用户协议页面
-  window.open('/user-agreement', '_blank');
+  // 根据环境动态构建URL
+  const baseUrl = window.location.hostname === 'one-eye-tech.github.io' 
+    ? 'https://one-eye-tech.github.io/ackoray-frontend' 
+    : '';
+  window.open(`${baseUrl}/url/terms.html`, '_blank');
   emit('close');
 };
 
