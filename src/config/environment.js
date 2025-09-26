@@ -8,7 +8,8 @@
 const PRODUCTION_CONFIG = {
   // 阿里云服务器地址 - 通过反向代理访问（端口80）
   // Nginx反向代理：80端口 -> 后端8081端口
-  API_BASE_URL: 'http://8.133.19.226',
+  // 临时使用HTTP，后续可升级为HTTPS
+  API_BASE_URL: 'http://8.133.19.226:8081',
   
   ENVIRONMENT: 'production'
 };
