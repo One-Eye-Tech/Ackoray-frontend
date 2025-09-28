@@ -438,7 +438,6 @@ const confirmCancelOrderAction = async () => {
   align-items: center;
   justify-content: center;
   padding-top: 0.5px; /* 向上微调 */
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   box-sizing: border-box; /* 确保padding不影响尺寸 */
   transition: none; /* 确保角标颜色不会跟随父元素变化 */
 }

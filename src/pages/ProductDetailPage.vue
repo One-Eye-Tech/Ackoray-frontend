@@ -1160,7 +1160,6 @@ watch(() => route.params.id, (newRouteId, oldRouteId) => {
   line-height: 1;
   text-align: center;
   vertical-align: middle;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   padding-top: 1px;
 }
 
