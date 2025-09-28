@@ -1,6 +1,5 @@
 <template>
   <div class="user-profile-page-container">
-    <TopNavigationBar />
     <main class="profile-main-content">
       <div class="profile-header">
         <button @click="$router.back()" class="back-btn">
@@ -152,7 +151,6 @@
 <script setup>
 import { ref, computed, inject, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
-import TopNavigationBar from '../components/layout/TopNavigationBar.vue';
 import Footer from '../components/layout/Footer.vue';
 import provincesData from '../assets/address/provinces.json';
 import citiesData from '../assets/address/cities.json';
@@ -355,7 +353,7 @@ onMounted(() => {
 }
 
 .profile-main-content {
-  padding-top: calc(var(--navbar-height, 60px) + 2rem);
+  padding-top: 5rem;
   padding-bottom: 4rem;
   flex-grow: 1;
   max-width: 900px; /* Wider for profile page */
@@ -894,7 +892,7 @@ onMounted(() => {
 /* 移动端优化样式 */
 @media (max-aspect-ratio: 1/1) {
   .profile-main-content {
-    padding-top: calc(var(--navbar-height, 60px) + 2rem); /* 与确认订单页面保持一致 */
+    padding-top: 2rem;
     padding-bottom: 2rem;
     max-width: 100%;
     padding-left: 1rem;

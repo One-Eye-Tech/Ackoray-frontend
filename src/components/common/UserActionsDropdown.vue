@@ -85,7 +85,7 @@ onUnmounted(() => {
   border-radius: var(--border-radius-medium);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 1100;
-  width: 180px;
+  width: 120px;
   overflow: hidden;
 }
 
@@ -100,8 +100,14 @@ onUnmounted(() => {
   color: var(--color-text);
   cursor: pointer;
   font-size: 0.9rem;
+  font-weight: 300;
+  font-family: 'Poppins', sans-serif;
   transition: background-color 0.2s ease, color 0.2s ease;
   border-radius: var(--border-radius-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .user-actions-dropdown li:hover,

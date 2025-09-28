@@ -1,6 +1,5 @@
 <template>
   <div class="order-detail-page-container">
-    <TopNavigationBar />
     <main class="order-detail-main-content">
       <div v-if="loading" class="loading-state">
         <p>{{ $t('orderDetail.loading') }}</p>
@@ -67,15 +66,10 @@
         <div class="order-contents-grid">
           <section class="shipping-address-section card">
             <h2>{{ $t('orderDetail.shippingAddress') }}</h2>
-            <!-- 优先使用地址快照信息 -->
+            <!-- 使用地址快照信息（订单创建时保存的地址信息） -->
             <div v-if="order.shippingRecipientName">
               <p class="name-phone-row"><strong>{{ order.shippingRecipientName }}</strong> <span class="phone-number">{{ order.shippingPhoneNumber }}</span></p>
               <p>{{ order.shippingProvince }}{{ order.shippingCity }}{{ order.shippingArea }}{{ order.shippingDetailedAddress }}</p>
-            </div>
-            <!-- 兜底：使用原地址信息（适用于旧订单） -->
-            <div v-else-if="order.shippingAddress">
-              <p class="name-phone-row"><strong>{{ order.shippingAddress.recipientName }}</strong> <span class="phone-number">{{ order.shippingAddress.phoneNumber }}</span></p>
-              <p>{{ order.shippingAddress.province }}{{ order.shippingAddress.city }}{{ order.shippingAddress.area }}{{ order.shippingAddress.detailedAddress }}</p>
             </div>
             <div v-else><p>{{ $t('orderDetail.addressNotAvailable') }}</p></div>
           </section>
@@ -169,7 +163,6 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import TopNavigationBar from '../components/layout/TopNavigationBar.vue';
 import Footer from '../components/layout/Footer.vue';
 import { getOrderById, updateOrderStatus } from '../api/orderApi';
 import { getFullImageUrl } from '../api/apiConfig.js';
@@ -291,7 +284,7 @@ onMounted(async () => {
 }
 
 .order-detail-main-content {
-  padding-top: calc(var(--navbar-height, 60px) + 2rem);
+  padding-top: 5rem;
   padding-bottom: 4rem;
   flex-grow: 1;
   max-width: 900px;
@@ -834,7 +827,7 @@ onMounted(async () => {
 /* Mobile responsive adjustments - reorder sections */
 @media (max-aspect-ratio: 1/1) {
   .order-detail-main-content {
-    padding-top: calc(var(--navbar-height, 60px) + 2rem);
+    padding-top: 2rem;
     padding-bottom: 2rem;
     max-width: 100%;
     padding-left: 1rem;

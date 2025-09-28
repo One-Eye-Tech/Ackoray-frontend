@@ -8,7 +8,6 @@
       :product-name-id="product.productNameId"
       :price-eth="product.priceEth"
       :last-sale-info="product.lastSaleInfo"
-      :buy-now-price-eth="product.buyNowPriceEth"
     />
   </div>
 </template>
@@ -28,7 +27,7 @@ defineProps({
 <style scoped>
 .product-grid-container {
   display: grid;
-  gap: 1.2rem;
+  gap: 2.5rem;
   grid-template-columns: repeat(4, 1fr);
   background-color: var(--color-bg);
 }

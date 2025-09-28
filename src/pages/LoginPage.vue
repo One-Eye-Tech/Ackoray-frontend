@@ -75,8 +75,7 @@
       <hr class="form-divider" />
 
       <p class="text-center">
-        {{ $t('auth.dontHaveAccount') }}
-        <router-link to="/register" class="link">{{ $t('auth.signUp') }}</router-link>
+        <router-link to="/register" class="link">立即注册</router-link>
       </p>
     </div>
 
@@ -584,6 +583,7 @@ const goToHome = () => {
 /* 忘记密码链接样式 */
 .forgot-password-link {
   font-size: 0.75rem; /* 14px, 缩小字体 */
+  font-weight: 400;
 }
 
 /* 协议文本样式 */
@@ -593,6 +593,7 @@ const goToHome = () => {
   text-align: center;
   line-height: 1.4;
   margin-top: 0.5rem;
+  font-weight: 600;
 }
 
 /* 标题行样式 */

@@ -1,6 +1,5 @@
 <template>
   <div class="product-detail-page">
-    <TopNavigationBar />
     <div v-if="loading" class="loading-indicator">
       <p>正在加载产品详情...</p>
     </div>
@@ -9,33 +8,38 @@
       <router-link to="/">返回首页</router-link>
     </div>
     <div v-else-if="product && product.id" class="detail-layout-container">
-      <!-- Top Row: Thumbnail strip (New transform-based implementation) -->
-      <div class="thumbnail-scroller-container" v-if="product.images && product.images.length > 1">
-        <!-- Back Button -->
-        <button @click="$router.back()" class="back-btn">
-          <svg viewBox="0 0 24 24" class="back-icon">
-            <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-        <div class="thumbnail-viewport" ref="viewportRef">
-          <div class="thumbnail-content" :style="contentStyle" ref="contentRef">
-            <img
-              v-for="image in product.images"
-               :key="image.id"
-               :src="getFullImageUrl(image.imageUrl)"
-               :alt="`${product.name} thumbnail`"
-               class="thumbnail-image"
-               :class="{ active: product.images[currentImageIndex]?.id === image.id }"
-              @click="handleThumbnailClick(image)"
-            />
-          </div>  
-        </div>
-      </div>
-
-      <!-- Bottom Row: Main content -->
+      <!-- Main content -->
       <div class="main-content">
         <!-- Left Column: Main Image -->
         <div class="product-image-gallery-section">
+          <!-- 返回按钮和预览图在同一行 -->
+          <div class="header-controls-row">
+            <!-- 返回按钮 -->
+            <button @click="$router.back()" class="back-btn-header">
+              <svg viewBox="0 0 24 24" class="back-icon">
+                <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            
+            <!-- 预览图条 -->
+            <div class="thumbnail-strip-inline" v-if="product.images && product.images.length > 1">
+              <div class="thumbnail-viewport" ref="viewportRef">
+                <div class="thumbnail-content" :style="contentStyle" ref="contentRef">
+                  <img
+                    v-for="image in product.images"
+                     :key="image.id"
+                     :src="getFullImageUrl(image.imageUrl)"
+                     :alt="`${product.name} thumbnail`"
+                     class="thumbnail-image"
+                     :class="{ active: product.images[currentImageIndex]?.id === image.id }"
+                    @click="handleThumbnailClick(image)"
+                  />
+                </div>  
+              </div>
+            </div>
+          </div>
+          
+          <!-- 主图片容器 -->
           <div 
             class="main-image-container"
             ref="imageContainerRef"
@@ -53,22 +57,11 @@
 
         <!-- Right Column: Product Info & Actions -->
 <div class="product-info-section">
-    <!-- New container for two-column layout -->
-  <div class="two-column-layout">
-
-    <!-- Box 1: Product Title -->
-    <div class="info-section-box">
+    <!-- 产品名称和价格 - 水平布局，同一行 -->
+    <div class="title-price-section">
       <h1 class="product-title">{{ product.name }}</h1>
+      <span class="current-price">{{ product.priceR ? Math.round(product.priceR) : 'N/A' }} RMB</span>
     </div>
-
-    <!-- Box 1.5: New Box to the right -->
-    <div class="info-section-box">
-      <div class="price-section">
-        <span class="current-price">{{ product.priceR ? Math.round(product.priceR) : 'N/A' }}</span>
-      </div>
-    </div>
-    
-  </div>
 
     <!-- Box 5: Selectors -->
   <div class="info-section-box">
@@ -80,31 +73,49 @@
 
     <div class="size-selector section">
       <span class="selector-label">{{ t('product.sizeLabel', '尺码') }} - {{ selectedSize ? selectedSize.name : t('product.selectSizePrompt', '请选择尺码') }}</span>
-      <div class="size-buttons">
-        <button
-          v-for="size in availableSizes"
-          :key="size.id"
-          class="size-btn"
-          :class="{ 
-            selected: selectedSize && selectedSize.id === size.id, 
-            disabled: !getVariantStock(size.id).available 
-          }"
-          @click="getVariantStock(size.id).available ? selectSize(size) : null"
-          :disabled="!getVariantStock(size.id).available"
+      
+      <!-- 尺码选择和数量控制容器 -->
+      <div class="size-selection-row">
+        <!-- 减号按钮 -->
+        <button 
+          class="step-btn decrease-btn" 
+          @click="decreaseSizeQuantity(selectedSize?.id)" 
+          :disabled="!selectedSize || getSizeQuantity(selectedSize?.id) <= 0"
         >
-          {{ size.name }}
+          <img :src="jianIcon" alt="-" class="step-icon" />
+        </button>
+        
+        <!-- 尺码按钮组 -->
+        <div class="size-options">
+          <button 
+            v-for="size in availableSizes" 
+            :key="size.id"
+            :class="['size-btn', { active: selectedSize && selectedSize.id === size.id }]"
+            @click="selectSize(size)"
+            :disabled="!getVariantStock(size.id).available"
+          >
+            {{ size.name }}
+            <span 
+              v-if="getSizeQuantity(size.id) > 0" 
+              class="size-quantity-badge"
+            >
+              {{ getSizeQuantity(size.id) }}
+            </span>
+          </button>
+        </div>
+        
+        <!-- 加号按钮 -->
+        <button 
+          class="step-btn increase-btn" 
+          @click="increaseSizeQuantity(selectedSize?.id)"
+          :disabled="!selectedSize"
+        >
+          <img :src="addIcon" alt="+" class="step-icon" />
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Box 2: Product Description -->
-  <div class="info-section-box">
-    <div class="description-section">
-      <span class="selector-label">{{ t('products.overview') }}</span>
-      <p class="product-description">{{ product.description }}</p>
-    </div>
-  </div>
 
   <!-- Box 3: Collapsible Fabric Information -->
   <div class="info-section-box">
@@ -154,20 +165,7 @@
   
 
   <!-- Box 6: Actions & Price -->
-  <div class="info-section-box actions-box">
-    <!-- 
-    <div class="action-buttons-container">
-      <button 
-        class="btn btn-primary combined-btn"
-        :disabled="!selectedColor || !selectedSize || !getVariantStock(selectedSize?.id).available"
-      >
-        <span class="buy-now-part" @click="handleBuyNow">立即购买</span>
-        <span class="divider-line"></span>
-        <span class="add-cart-part" @click="handleAddToCart">
-          <CartIcon />
-        </span>
-      </button>
-    </div> -->
+  <div class="actions-box">
     <div class="action-buttons-container">
       <button 
         class="btn btn-primary"
@@ -223,7 +221,6 @@
 import { ref, onMounted, computed, inject, watch, nextTick, onUnmounted, onUpdated} from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import TopNavigationBar from '../components/layout/TopNavigationBar.vue';
 import ArrowLeftIcon from '../assets/icons/ArrowLeftIcon.vue';
 import ArrowRightIcon from '../assets/icons/ArrowRightIcon.vue';
 import { getProductByIdApi } from '../api/productApi';
@@ -235,6 +232,8 @@ import productInfoImage from '../assets/images/cp1.png';
 import fabricInfoImage from '../assets/images/cp2.png';
 import menSizeChartImage from '../assets/images/men.png';
 import womenSizeChartImage from '../assets/images/women.png';
+import addIcon from '../assets/icons/add.png';
+import jianIcon from '../assets/icons/jian.png';
 
 const route = useRoute();
 const router = useRouter();
@@ -277,6 +276,8 @@ const selectedColor = ref(null);
 const selectedSize = ref(null);
 const availableColors = ref([]);
 const availableSizes = ref([]);
+// 尺码数量状态管理
+const sizeQuantities = ref({}); // 存储每个尺码的数量，格式：{ sizeId: quantity }
 
 const defaultImageUrl = 'https://via.placeholder.com/700x700.png?text=Product+Not+Found';
 
@@ -552,7 +553,33 @@ const selectColor = (color) => {
 const selectSize = (size) => {
   if (getVariantStock(size.id).available) {
     selectedSize.value = size;
+    // 如果该尺码还没有数量记录，初始化为0
+    if (!sizeQuantities.value[size.id]) {
+      sizeQuantities.value[size.id] = 0;
+    }
   }
+};
+
+// 增加尺码数量
+const increaseSizeQuantity = (sizeId) => {
+  if (!sizeId) return; // 如果没有选中尺码，直接返回
+  if (!sizeQuantities.value[sizeId]) {
+    sizeQuantities.value[sizeId] = 0;
+  }
+  sizeQuantities.value[sizeId]++;
+};
+
+// 减少尺码数量
+const decreaseSizeQuantity = (sizeId) => {
+  if (!sizeId) return; // 如果没有选中尺码，直接返回
+  if (sizeQuantities.value[sizeId] && sizeQuantities.value[sizeId] > 0) {
+    sizeQuantities.value[sizeId]--;
+  }
+};
+
+// 获取尺码数量
+const getSizeQuantity = (sizeId) => {
+  return sizeQuantities.value[sizeId] || 0;
 };
 
 // 获取特定尺码的库存信息
@@ -587,8 +614,22 @@ const findProductVariantId = (colorId, sizeId) => {
 };
 
 const handleAddToCart = () => {
+  // 1. 判断用户是否登录
   if (!isLoggedIn()) {
     alert('请先登录后再添加商品到购物车');
+    return;
+  }
+
+  // 2. 判断是否选择了尺码
+  if (!selectedSize.value) { 
+    alert('请选择尺码');
+    return;
+  }
+
+  // 3. 判断是否选择了数量
+  const currentQuantity = getSizeQuantity(selectedSize.value.id);
+  if (currentQuantity <= 0) {
+    alert('请选择数量');
     return;
   }
 
@@ -598,10 +639,6 @@ const handleAddToCart = () => {
   }
   if (!selectedColor.value) {
     alert(t('product.selectColorPrompt', '请选择颜色。'));
-    return;
-  }
-  if (!selectedSize.value) { 
-    alert(t('product.selectSizePrompt', '请选择尺码。'));
     return;
   }
   
@@ -622,6 +659,7 @@ const handleAddToCart = () => {
     color: selectedColor.value ? selectedColor.value.name : undefined, 
     size: selectedSize.value ? selectedSize.value.name : undefined,
     productVariantId: variantId,
+    quantity: currentQuantity, // 添加数量
     permalink: `/product/${product.value.id}`
   };
   addToCart(itemToAdd);
@@ -631,8 +669,22 @@ const handleAddToCart = () => {
 };
 
 const handleBuyNow = () => {
+  // 1. 判断用户是否登录
   if (!isLoggedIn()) {
     alert('请先登录后再进行购买');
+    return;
+  }
+
+  // 2. 判断是否选择了尺码
+  if (!selectedSize.value) {
+    alert('请选择尺码');
+    return;
+  }
+
+  // 3. 判断是否选择了数量
+  const currentQuantity = getSizeQuantity(selectedSize.value.id);
+  if (currentQuantity <= 0) {
+    alert('请选择数量');
     return;
   }
 
@@ -642,10 +694,6 @@ const handleBuyNow = () => {
   }
   if (!selectedColor.value) {
     alert(t('product.selectColorPrompt', '请选择颜色。'));
-    return;
-  }
-  if (!selectedSize.value) {
-    alert(t('product.selectSizePrompt', '请选择尺码。'));
     return;
   }
   
@@ -666,7 +714,7 @@ const handleBuyNow = () => {
     color: selectedColor.value ? selectedColor.value.name : undefined,
     size: selectedSize.value ? selectedSize.value.name : undefined,
     productVariantId: variantId,
-    quantity: 1,
+    quantity: currentQuantity, // 使用实际选择的数量
     permalink: `/product/${product.value.id}`
   };
   sessionStorage.setItem('directBuyItem', JSON.stringify(itemToBuy));
@@ -704,9 +752,8 @@ watch(() => route.params.id, (newRouteId, oldRouteId) => {
 
 <style scoped>
 .product-detail-page {
-  padding-top: var(--navbar-height, 50px);
-background-color: var(--color-bg);
-  min-height: calc(100vh - var(--navbar-height, 50px));
+  background-color: var(--color-bg);
+  min-height: 100vh;
   color: var(--color-text);
 }
 
@@ -734,16 +781,24 @@ background-color: var(--color-bg);
   width: 100%;
   box-sizing: border-box;
 }
-/* --- Styles for New Thumbnail Scroller --- */
-.thumbnail-scroller-container {
+/* --- 头部控制行样式（返回按钮+预览图同一行）--- */
+.header-controls-row {
   display: flex;
   align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 2.5rem;
+  margin-top: -1.5rem;
+  padding: 0rem;
+}
+
+/* --- 内联预览图条样式 --- */
+.thumbnail-strip-inline {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  margin-left: -8rem; /* 抵消返回按钮的宽度，实现真正居中 */
   position: relative;
-  /* 将左侧内边距从 1.5rem 增大到 4rem，您可以根据喜好调整这个值 */
-  padding: 0.75rem 1.5rem 0.75rem 18rem;
-  background-color: var(--color-card);
-  border-bottom: 1px solid var(--color-border);
-  gap: 1rem;
+  z-index: 1; /* 确保预览图在按钮下层 */
 }
 
 .thumbnail-viewport {
@@ -761,11 +816,12 @@ background-color: var(--color-bg);
   height: 42px;
   object-fit: cover;
   border-radius: 6px;
-  border: 2px solid transparent;
+  background-color: var(--color-border);
   cursor: pointer;
-  transition: border-color 0.2s ease, opacity 0.2s ease;
+  transition: opacity 0.2s ease;
+  background-image: url(addIcon);
   flex-shrink: 0;
-  opacity: 0.5;
+  opacity: 0.6;
 }
 
 .thumbnail-image:hover {
@@ -773,7 +829,6 @@ background-color: var(--color-bg);
 }
 
 .thumbnail-image.active {
-  border-color: var(--color-border);
   opacity: 1;
 }
 
@@ -811,30 +866,13 @@ background-color: var(--color-bg);
   background: transparent;
 }
 
-.thumbnail-image {
-  width: 42px;
-  height: 42px;
-  object-fit: cover;
-  border-radius: 6px;
-  border: 2px solid transparent;
-  cursor: pointer;
-  transition: border-color 0.2s ease, transform 0.2s ease;
-  flex-shrink: 0;
-  opacity: 0.5;
-}
-.thumbnail-image:hover {
-  transform: none;
-}
-.thumbnail-image.active {
-  border: 1px solid var(--color-border); /* 选中时使用白色描边 */
-  opacity: 1;
-  box-shadow: none;
-}
 .main-content {
   display: flex;
   flex: 1;
   /* 这是修复 Flexbox 布局下子元素无法滚动的最关键属性 */
   min-height: 0;
+  /* 确保主内容区域占满整个视口高度，让分隔线延长到底部 */
+  min-height: 100vh;
 }
 
 .product-image-gallery-section {
@@ -843,8 +881,7 @@ background-color: var(--color-bg);
   background-color: var(--color-card);
   padding: 1rem 2.5rem;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column; /* 改为垂直布局 */
   box-sizing: border-box;
   position: relative; /* 改为relative，以便返回按钮可以绝对定位 */
   /* --- 新增：粘性定位逻辑 --- */
@@ -873,6 +910,7 @@ background-color: var(--color-bg);
   max-height: 100%;
   object-fit: contain; /* 让图片等比缩放以适应容器 */
   border-radius: var(--border-radius-medium);
+  background-color: var(--color-border);
 }
 
 /* 图片容器滑动切换样式 */
@@ -897,12 +935,8 @@ background-color: var(--color-bg);
   transition: transform 0.2s ease;
 }
 
-/* Back button styles */
-.back-btn {
-  position: absolute;
-  top: 50%;
-  left: 6.5rem;
-  transform: translateY(-50%);
+/* Back button header styles */
+.back-btn-header {
   width: 42px;
   height: 42px;
   border: 1px solid var(--color-border);
@@ -914,24 +948,27 @@ background-color: var(--color-bg);
   cursor: pointer;
   transition: all 0.2s ease;
   padding: 0;
-  z-index: 20;
+  flex-shrink: 0;
+  margin-left: 4.2rem;
+  position: relative;
+  z-index: 10; /* 确保按钮在最上层 */
 }
 
-.back-btn:hover {
-  transform: translateY(calc(-50% - 2px));
+.back-btn-header:hover {
+  transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.back-icon {
+.back-btn-header .back-icon {
   width: 24px;
   height: 24px;
   color: var(--color-text);
 }
 .product-info-section {
   flex: 1 1 50%;
-  padding: 3rem 5rem 2.5rem 4rem;
+  padding: 7.4rem 5rem 2.5rem 4rem; /* 进一步增大顶部间距，将信息部分整体向下移动 */
   box-sizing: border-box;
-  border-left: 1px solid var(--color-border-subtle, #242527);
+  border-left: 1px solid var(--color-border); /* 分隔线 */
 
   display: flex;
   flex-direction: column;
@@ -939,6 +976,12 @@ background-color: var(--color-bg);
 
   /* --- 核心：只保留这一行来实现带滚动条的滚动 --- */
   overflow-y: auto;
+  
+  /* 将所有文字设置为Poppins字体 */
+  font-family: 'Poppins', sans-serif;
+  
+  /* 确保信息区域至少占满视口高度，让分隔线延长到底部 */
+  min-height: 100vh;
 }
 
 /* 保持这个独立的规则，以兼容 Chrome/Safari */
@@ -947,7 +990,7 @@ background-color: var(--color-bg);
 }
 
 .product-title {
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: 600; 
   color: var(--color-text);
   margin: 0;
@@ -1013,56 +1056,123 @@ background-color: var(--color-bg);
 }
 
 
-.size-buttons { 
-  display: flex; 
-  flex-wrap: wrap; 
-  gap: 1rem; 
+/* 尺码选择行：左右+-按钮 + 中间尺码 - 靠左对齐 */
+.size-selection-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: flex-start; /* 靠左对齐 */
+  width: fit-content; /* 不占满整个宽度 */
 }
 
-.size-btn {
-  padding: 0.6rem 1rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  border: 1px solid var(--color-border-subtle);
-  background-color: var(--color-card);
-  color: var(--color-text-secondary);
-  border-radius: var(--border-radius-medium, 1px);
+.size-options {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.step-btn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--color-card);
   cursor: pointer;
-  text-align: center;
-  min-width: 45px;
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 
-.size-btn:hover:not(.disabled) {
-  border-color: var(--color-text-secondary);
-  background-color: var(--color-card);
-  color: var(--color-text-primary, #ffffff);
-}
-
-.size-btn.selected {
-  background-color: var(--color-primary);
-  color: var(--color-button-primary-text);
+.step-btn:hover, .step-btn:active, .step-btn:focus {
   border-color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary), transparent 95%);
+  outline: none;
 }
 
-.size-btn.disabled {
+.step-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  background-color: transparent;
-  color: var(--color-text-disabled);
-  border-color: var(--color-border-subtle);
+}
+
+.step-icon {
+  width: 16px;
+  height: 16px;
+  filter: brightness(0); /* 将图标变为黑色 */
+}
+
+/* 尺码按钮样式 */
+.size-btn {
+  position: relative;
+  width: 45px;
+  height: 45px;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-medium);
+  background: var(--color-card);
+  color: var(--color-text);
+  font-size: 0.875rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.size-btn:hover {
+  border-color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary), transparent 95%);
+}
+
+.size-btn.active {
+  border-color: var(--color-primary);
+  background: var(--color-card);
+  color: var(--color-text);
+}
+
+.size-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* 尺码数量标记 */
+.size-quantity-badge {
+  position: absolute;
+  top: -0.4rem;
+  right: -0.4rem;
+  background: var(--color-primary);
+  color: white;
+  border-radius: 50%;
+  width: 1.2rem;
+  height: 1.2rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.2rem;
+  line-height: 1;
+  text-align: center;
+  vertical-align: middle;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  padding-top: 1px;
 }
 
 .card-divider {
   border: none;
   height: 1px;
   background-color: var(--color-border-subtle);
-  margin: 1rem 0;
+  margin: 1.2rem 0;
 }
 
 .price-section { 
   text-align: center; /* 价格左右居中 */
-  margin-bottom: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1074,12 +1184,20 @@ background-color: var(--color-bg);
   color: var(--color-primary);
 }
 
+.actions-box {
+  border: none; /* 删除外层边框 */
+  background-color: transparent;
+  padding: 0;
+  margin: 1.5rem 0;
+}
+
 .action-buttons-container {
   display: flex;
-  gap: 1rem; /* 为两个按钮添加间距 */
+  flex-direction: column; /* 上下布局 */
+  gap: 1.5rem; /* 增大两个按钮间距 */
 }
 .btn {
-  padding: 0.7rem 1.2rem;
+  padding: 1rem 1.2rem;
   border-radius: var(--border-radius-medium);
   font-weight: 600;
   cursor: pointer;
@@ -1089,7 +1207,7 @@ background-color: var(--color-bg);
   justify-content: center;
   transition: background-color 0.2s ease, border-color 0.2s ease;
   font-size: 1rem;
-  flex: 1; /* 让两个按钮平分空间 */
+  width: 100%; /* 让按钮占满容器宽度 */
 }
 .btn:disabled {
   opacity: 0.6;
@@ -1100,8 +1218,7 @@ background-color: var(--color-bg);
   color: var(--color-button-primary-text);
 }
 .btn-primary:hover:not(:disabled) {
-  background-color: var(--color-accent-hover); 
-  border-color: var(--color-accent-hover);
+  transform: translateY(-2px);
 }
 
 /* 新增：次要按钮样式 */
@@ -1112,8 +1229,7 @@ background-color: var(--color-bg);
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background-color: var(--color-button-secondary-hover);
-  border-color: var(--color-border);
+  transform: translateY(-2px);
 }
 
 .out-of-stock-message {
@@ -1132,12 +1248,6 @@ background-color: var(--color-bg);
   display: none;
 }
 
-@media (min-width: 768px) {
-  .action-buttons-container {
-    flex-direction: row; 
-    gap: 1rem;
-  }
-}
 @media (max-width: 992px) { 
   .main-content {
     flex-direction: column;
@@ -1164,7 +1274,7 @@ background-color: var(--color-bg);
   }
   .product-title { font-size: 1.5rem; }
   .current-price { font-size: 1.3rem; }
-  .action-buttons-container { flex-direction: column; gap: 0.5rem; }
+  .action-buttons-container { flex-direction: column; gap: 1.2rem; }
   .modal-panel { width: 85vw; max-width: none; padding: 1rem; }
   .size-buttons, .color-buttons { gap: 0.5rem; }
   .size-btn, .color-btn { padding: 0.5rem 0.8rem; font-size: 0.8rem; }
@@ -1257,7 +1367,7 @@ background-color: var(--color-bg);
 .info-sections-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 2rem;
   margin: 1.5rem 0;
 }
 
@@ -1265,7 +1375,8 @@ background-color: var(--color-bg);
   border: 1px solid var(--color-border-subtle);
   border-radius: var(--border-radius-medium, 6px);
   background-color: var(--color-card);
-  padding: 1.1rem 1rem;
+  padding: 1.2rem 1rem;
+  margin: 0.5rem 0; /* 增加统一的上下间距 */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1310,8 +1421,6 @@ background-color: var(--color-bg);
   display: none;
 }
 
-/* --- Styles for Collapsible Fabric Section --- */
-
 .collapsible-header {
   display: flex;
   justify-content: space-between;
@@ -1346,38 +1455,31 @@ background-color: var(--color-bg);
   transform: rotate(90deg);
 }
 
-.two-column-layout {
+/* 产品名称和价格垂直布局 */
+.title-price-section {
   display: flex;
+  flex-direction: row; /* 水平布局 */
+  justify-content: space-between; /* 名称靠左，价格靠右 */
+  align-items: center; /* 垂直居中对齐 */
   gap: 1rem;
+  margin-bottom: 1rem;
 }
 
-/* 两个边框的通用样式：垂直居中 */
-.two-column-layout .info-section-box {
-  display: flex;
-  align-items: center;
+.title-price-section .product-title {
+  font-size: 2rem;
+  font-weight: 500;
+  color: var(--color-text);
+  margin: 0;
+  line-height: 1.3;
+  font-family: 'Poppins', sans-serif;
 }
 
-/* 第一个边框（标题）的比例 */
-.two-column-layout .info-section-box:first-child {
-  flex: 7;
-}
-
-/* 第二个边框（价格）的比例和水平居中 */
-.two-column-layout .info-section-box:last-child {
-  flex: 2;
-  justify-content: center;
-  border: none; /* 移除web端价格边框 */
-  background-color: transparent; /* 移除web端价格背景色 */
-}
-
-/* 
-  关键修复：
-  重置价格容器自身的样式，防止它破坏父级的居中效果 
-*/
-.two-column-layout .price-section {
-  margin: 0; /* 移除可能存在的 margin */
-  width: 100%; /* 让它撑满父容器 */
-  text-align: center; /* 确保文字居中 */
+.title-price-section .current-price {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--color-primary); /* 使用主题紫色 */
+  font-family: 'Poppins', sans-serif;
+  flex-shrink: 0; /* 防止价格被压缩 */
 }
 
 /* 移动端样式优化 */
@@ -1399,54 +1501,56 @@ background-color: var(--color-bg);
     /* 它的高度将占满视口的剩余空间 */
     height: calc(93vh - var(--navbar-height)) - calc(93vh - var(--navbar-height));
   }
-  .thumbnail-scroller-container {
-    padding: 0.5rem;
+  .header-controls-row {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.8rem;
+    margin-top: 0.1rem;
+    margin-left: -4.3rem;
+    padding: 0 0.1rem;
+    justify-content: flex-start;
+  }
+  
+  .thumbnail-strip-inline {
+    flex: 1;
     display: flex;
     justify-content: flex-start;
-    align-items: center;
-    margin: 0 auto;
-    width: 100%;
-    gap: 0.8rem;
+    margin-left: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 0;
+    gap: 0.5rem;
   }
   
-  .thumbnail-viewport {
-    overflow: hidden;
-    min-width: 0;
-    flex: 1;
-    margin-right: 0.5rem;
-  }
-  
-  .thumbnail-content {
-    gap: 0.3rem;
-    justify-content: flex-start;
+  .thumbnail-strip-inline::-webkit-scrollbar {
+    display: none;
   }
   
   .thumbnail-image {
     width: 34px;
     height: 34px;
     border-radius: 7px;
+    flex-shrink: 0;
+    cursor: pointer;
   }
   
-  .back-btn {
-    position: static;
-    transform: none !important; /* 确保默认状态无变换 */
-    box-shadow: none !important; /* 确保默认状态无阴影 */
+  .back-btn-header {
     width: 34px;
     height: 34px;
-    margin-left: 0.5rem;
-    flex-shrink: 0;
     border-radius: 7px;
   }
-
-  /* 移动端返回按钮移除上移效果 */
-  .back-btn:hover {
-    transform: none !important;
-    box-shadow: none !important;
-  }
   
-  .back-icon {
+  .back-btn-header .back-icon {
     width: 20px;
     height: 20px;
+  }
+  
+  .back-btn-header:hover {
+    transform: none;
+    box-shadow: none;
   }
   
   /* 移动端图片展示区域限制 */
@@ -1477,7 +1581,7 @@ background-color: var(--color-bg);
   .product-info-section {
     flex: none;
     width: 100%;
-    padding: 1.5rem 1rem;
+    padding: 1.2rem 1rem;
     background-color: var(--color-bg);
     border-top: 1px solid var(--color-border);
   }
@@ -1493,8 +1597,8 @@ background-color: var(--color-bg);
     border: none;
     border-radius: 0;
     background-color: transparent;
-    padding: 1rem 0;
-    margin: -0.7rem;
+    padding: 1rem 0rem;
+    margin: -0.7rem 0;
   }
   
   /* 移动端增大按钮间距 */
@@ -1502,62 +1606,25 @@ background-color: var(--color-bg);
     gap: 0.8rem;
   }
   
-  /* 移动端缩小文字大小 */
-  .product-title {
-    font-size: 1rem;
+  /* 移动端产品名称和价格样式 */
+  .title-price-section {
+    margin-bottom: 0.3rem;
+    gap: 0.3rem;
+  }
+  
+  .title-price-section .product-title {
+    font-size: 1.1rem;
     font-weight: 500;
-    text-align: center; /* 产品名称居中显示 */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-  }
-
-  /* 第一个边框（标题）的比例 */
-.two-column-layout .info-section-box:first-child {
-  flex: 7;
-}
-
-/* 第二个边框（价格）的比例和水平居中 */
-.two-column-layout .info-section-box:last-child {
-  flex: 3;
-  justify-content: center;
-}
-  
-  .current-price {
-    font-size: 1.6rem; /* 增大价格文字 */
-    font-weight: 600;
-  }
-  
-  /* 移动端调整所有信息框的内边距 */
-  .info-section-box {
-    padding: 0.8rem 0.8rem;
-  }
-
-  /* 移动端调整产品名称和价格边框 */
-  .two-column-layout .info-section-box:first-child {
-    padding: 0.8rem 0.2rem; /* 缩小产品名称的左右内边距 */
-  }
-  
-  .two-column-layout .info-section-box:last-child {
-    padding: 0.2rem 0rem;
-    border: none; /* 移除价格外边框 */
-    background-color: transparent; /* 移除价格背景色 */
-  }
-
-  .two-column-layout {
-    gap: 0.4rem;
-  }
-  
-  /* 移动端确保价格和单位在一行显示 */
-  .two-column-layout .price-section {
-    white-space: nowrap;
     text-align: left;
+    font-family: 'Poppins', sans-serif;
   }
   
-  .two-column-layout .current-price {
-    display: inline-block;
-    white-space: nowrap;
+  .title-price-section .current-price {
+    font-size: 1.45rem;
+    font-weight: 600;
+    letter-spacing: -0.1rem;
+    color: var(--color-primary); /* 使用主题紫色 */
+    font-family: 'Poppins', sans-serif;
   }
 
     /* 移动端按钮高度与尺码选择器保持一致 */
@@ -1566,6 +1633,11 @@ background-color: var(--color-bg);
     font-size: 1rem;
   }
 
-  
+  /* 移动端信息边框样式优化 */
+  .info-section-box {
+    padding: 0.8rem 0.8rem; /* 缩小内边距 */
+    margin: 0.1rem 0; /* 缩小边框间距 */
+  }
+
 }
 </style>

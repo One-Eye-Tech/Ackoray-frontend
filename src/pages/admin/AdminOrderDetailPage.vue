@@ -79,17 +79,11 @@
         <div class="order-contents-grid">
           <section class="shipping-address-section card">
             <h2>收货地址</h2>
-            <!-- 优先使用地址快照信息 -->
+            <!-- 使用地址快照信息（订单创建时保存的地址信息） -->
             <div v-if="order.shippingRecipientName">
               <p><strong>{{ order.shippingRecipientName }}</strong></p>
               <p>{{ order.shippingPhoneNumber }}</p>
               <p>{{ order.shippingProvince }}{{ order.shippingCity }}{{ order.shippingArea }}{{ order.shippingDetailedAddress }}</p>
-            </div>
-            <!-- 兜底：使用原地址信息（适用于旧订单） -->
-            <div v-else-if="order.shippingAddress">
-              <p><strong>{{ order.shippingAddress.recipientName }}</strong></p>
-              <p>{{ order.shippingAddress.phoneNumber }}</p>
-              <p>{{ order.shippingAddress.province }}{{ order.shippingAddress.city }}{{ order.shippingAddress.area }}{{ order.shippingAddress.detailedAddress }}</p>
             </div>
             <div v-else><p>地址不可用</p></div>
           </section>

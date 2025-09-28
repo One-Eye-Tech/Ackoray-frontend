@@ -1,9 +1,8 @@
 <template>
   <div class="user-orders-page-container">
-    <TopNavigationBar />
     <main class="orders-main-content">
       <div class="orders-header">
-        <button @click="$router.back()" class="back-btn">
+        <button @click="$router.push('/')" class="back-btn">
           <svg viewBox="0 0 24 24" class="back-icon">
             <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
@@ -93,7 +92,6 @@
 <script setup>
 import { ref, onMounted, computed, inject, onUnmounted, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
-import TopNavigationBar from '../components/layout/TopNavigationBar.vue';
 import Footer from '../components/layout/Footer.vue';
 import { useRouter } from 'vue-router';
 import { getOrdersByUserId, updateOrderStatus } from '../api/orderApi';
@@ -319,7 +317,7 @@ const confirmCancelOrderAction = async () => {
 }
 
 .orders-main-content {
-  padding-top: calc(var(--navbar-height, 60px) + 2rem);
+  padding-top: 5rem;
   padding-bottom: 4rem;
   flex-grow: 1;
   max-width: 900px;
@@ -682,7 +680,7 @@ const confirmCancelOrderAction = async () => {
 /* Mobile responsive adjustments - equivalent to web scaled down */
 @media (max-aspect-ratio: 1/1) {
   .orders-main-content {
-    padding-top: calc(var(--navbar-height, 60px) + 2rem);
+    padding-top: 2rem;
     padding-bottom: 2rem;
     max-width: 100%;
     padding-left: 1rem;

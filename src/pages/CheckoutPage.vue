@@ -610,10 +610,23 @@ let timerInterval = null;
           quantity: item.quantity,
       }));
 
+      // 获取选中的地址对象
+      const selectedAddress = savedAddresses.value.find(addr => addr.id === selectedAddressId.value);
+      if (!selectedAddress) {
+          throw new Error('请选择收货地址');
+      }
+
       // 构建 CreateOrderRequestDto
       const orderRequestData = {
           userId: loggedInUser.value.id,
-          shippingAddressId: selectedAddressId.value,
+          shippingAddress: {
+              recipientName: selectedAddress.recipientName,
+              phoneNumber: selectedAddress.phoneNumber,
+              province: selectedAddress.province,
+              city: selectedAddress.city,
+              area: selectedAddress.area,
+              detailedAddress: selectedAddress.detailedAddress
+          },
           paymentMethod: selectedPaymentMethod.value,
           customerNotes: orderNotes.value,
           items: orderItemsData,

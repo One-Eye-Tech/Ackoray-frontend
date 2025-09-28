@@ -9,10 +9,6 @@
           <h4 class="product-name-id">{{ productNameId }}</h4>
           <p class="price-eth">{{ priceEth }} RMB</p>
         </div>
-        <div v-if="buyNowPriceEth" class="buy-now-overlay">
-          <span class="buy-now-text">{{ $t('products.buyNow') }}</span>
-          <span class="buy-now-price">{{ buyNowPriceEth }} RMB</span>
-        </div>
       </div>
     </div>
   </router-link>
@@ -36,8 +32,7 @@ const props = defineProps({
     type: [String, Number],
     required: true
   },
-  lastSaleInfo: String,
-  buyNowPriceEth: [String, Number]
+  lastSaleInfo: String
 });
 
 const productId = computed(() => {
@@ -81,15 +76,11 @@ const defaultImage = 'https://via.placeholder.com/200x200.png?text=Product';
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
-.product-item-card:hover .price-eth {
-  opacity: 0;
-  visibility: hidden;
-}
 
 .image-container {
   position: relative;
   width: 100%;
-  aspect-ratio: 1/1;
+  aspect-ratio: 3/4;
 }
 
 .product-image {
@@ -99,7 +90,7 @@ const defaultImage = 'https://via.placeholder.com/200x200.png?text=Product';
 }
 
 .info-container {
-  padding: 1rem;
+  padding: 1.2rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -108,83 +99,53 @@ const defaultImage = 'https://via.placeholder.com/200x200.png?text=Product';
   background-color: var(--color-card);
   border-bottom-left-radius: var(--border-radius-large);
   border-bottom-right-radius: var(--border-radius-large);
-  height: 4.8rem;
+  height: 7rem;
 }
 
 .product-name-id {
-  font-size: 0.95rem;
-  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 400;
   color: var(--color-text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   margin: 0;
   line-height: 1.2;
+  padding-top: 0.5rem;
 }
 
 .price-eth {
-  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.1rem;
   color: var(--color-text);
   font-weight: 600;
   margin: 0;
   line-height: 1.2;
-  transition: opacity 0.1s ease-out, visibility 0.1s ease-out;
+  margin-bottom: 0.5rem;
 }
 
-.buy-now-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background-color: var(--color-primary);
-  color: var(--color-button-primary-text);
-  padding: 0.5rem 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom-left-radius: var(--border-radius-large);
-  border-bottom-right-radius: var(--border-radius-large);
-  transform: translateY(100%);
-  opacity: 0;
-  visibility: hidden;
-  transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.3s ease-out, visibility 0.3s ease-out;
-  z-index: 5;
-  box-sizing: border-box;
-}
-
-.product-item-card:hover .buy-now-overlay {
-  transform: translateY(0);
-  opacity: 1;
-  visibility: visible;
-}
-
-.buy-now-text {
-  font-size: 0.95rem;
-  font-weight: 500;
-}
-
-.buy-now-price {
-  font-size: 1rem;
-  font-weight: 500;
-}
 
 /* 移动端样式优化 */
 @media (max-aspect-ratio: 1/1) {
   .info-container {
-    padding: 0.7rem 0.2rem 0.5rem 0.2rem; /* 缩小左右内边距 */
-    height: 3.1rem;
+    padding: 0.8rem 0.2rem 0.5rem 0.2rem; /* 缩小左右内边距 */
+    height: 3.3rem; /* 增加高度避免文字重叠 */
   }
   
   .product-name-id {
-    font-size: 0.75rem;
-    line-height: 1;
-    font-weight: 500;
+    font-size: 0.7rem;
+    line-height: 1; /* 增加行高 */
+    font-weight: 400;
+    padding-top: 0; /* 移除桌面端的顶部内边距 */
   }
   
   .price-eth {
     font-size: 0.7rem;
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: -0.03rem;
+    margin-top: auto; /* 将价格推到底部 */
+    margin-bottom: 0; /* 移除桌面端的底部边距 */
   }
   
   .card-content-wrapper {
@@ -204,21 +165,6 @@ const defaultImage = 'https://via.placeholder.com/200x200.png?text=Product';
   .product-item-card:hover .card-content-wrapper {
     transform: none;
     box-shadow: none;
-  }
-  
-  .product-item-card:hover .price-eth {
-    opacity: 1;
-    visibility: visible;
-  }
-  
-  .product-item-card:hover .buy-now-overlay {
-    transform: translateY(100%);
-    opacity: 0;
-    visibility: hidden;
-  }
-  
-  .buy-now-overlay {
-    display: none;
   }
 }
 </style> 
