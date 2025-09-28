@@ -60,7 +60,10 @@
     <!-- 产品名称和价格 - 水平布局，同一行 -->
     <div class="title-price-section">
       <h1 class="product-title">{{ product.name }}</h1>
-      <span class="current-price">{{ product.priceR ? Math.round(product.priceR) : 'N/A' }} RMB</span>
+      <div class="price-container">
+        <span class="current-price">{{ product.priceR ? Math.round(product.priceR) : 'N/A' }} RMB</span>
+        <span class="original-price">599 RMB</span>
+      </div>
     </div>
 
     <!-- Box 5: Selectors -->
@@ -1183,6 +1186,22 @@ watch(() => route.params.id, (newRouteId, oldRouteId) => {
   color: var(--color-primary);
 }
 
+.price-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.original-price {
+  display: none; /* Web端不显示 */
+  font-size: 1rem;
+  font-weight: 400;
+  color: #999;
+  text-decoration: line-through;
+  margin-left: 0.5rem;
+  font-family: 'Poppins', sans-serif;
+}
+
 .actions-box {
   border: none; /* 删除外层边框 */
   background-color: transparent;
@@ -1580,7 +1599,7 @@ watch(() => route.params.id, (newRouteId, oldRouteId) => {
   .product-info-section {
     flex: none;
     width: 100%;
-    padding: 1.2rem 1rem;
+    padding: 1rem 1rem;
     background-color: var(--color-bg);
     border-top: 1px solid var(--color-border);
   }
@@ -1607,23 +1626,41 @@ watch(() => route.params.id, (newRouteId, oldRouteId) => {
   
   /* 移动端产品名称和价格样式 */
   .title-price-section {
-    margin-bottom: 0.3rem;
-    gap: 0.3rem;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 0rem;
+    margin-left: 0.8rem;
+    gap: 0.5rem;
   }
   
   .title-price-section .product-title {
-    font-size: 1.1rem;
-    font-weight: 500;
+    font-size: 1rem;
+    font-weight: 600;
     text-align: left;
     font-family: 'Poppins', sans-serif;
   }
   
   .title-price-section .current-price {
-    font-size: 1.45rem;
+    font-size: 1rem;
     font-weight: 600;
-    letter-spacing: -0.1rem;
-    color: var(--color-primary); /* 使用主题紫色 */
+    letter-spacing: -0.05rem;
+    color: var(--color-primary);
     font-family: 'Poppins', sans-serif;
+  }
+
+  .price-container .original-price {
+    display: inline; /* 移动端显示 */
+    font-size: 1rem;
+    font-weight: 600;
+    color: #999;
+    text-decoration: line-through;
+    margin-left: 0.1rem; /* 使用父容器的gap控制间距 */
+    font-family: 'Poppins', sans-serif;
+    letter-spacing: -0.05rem;
+  }
+
+  .price-container {
+    gap: 0.3rem; /* 移动端更小的间距 */
   }
 
     /* 移动端按钮高度与尺码选择器保持一致 */
@@ -1636,6 +1673,17 @@ watch(() => route.params.id, (newRouteId, oldRouteId) => {
   .info-section-box {
     padding: 0.8rem 0.8rem; /* 缩小内边距 */
     margin: 0.1rem 0; /* 缩小边框间距 */
+  }
+
+  /* 移动端尺码选择器居中 */
+  .size-selection-row {
+    justify-content: center; /* 横向居中 */
+    width: 100%; /* 占满容器宽度 */
+  }
+
+  /* 移动端信息标题字体粗细减小 */
+  .selector-label {
+    font-weight: 400; /* 从500减小到400 */
   }
 
 }
