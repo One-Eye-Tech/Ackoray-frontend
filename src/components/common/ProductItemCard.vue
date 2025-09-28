@@ -81,12 +81,15 @@ const defaultImage = 'https://via.placeholder.com/200x200.png?text=Product';
   position: relative;
   width: 100%;
   aspect-ratio: 3/4;
+  overflow: hidden; /* 防止图片内容超出容器 */
 }
 
 .product-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: cover; /* 保持图片比例，填充整个容器 */
+  object-position: center; /* 图片居中显示 */
+  display: block; /* 移除默认的inline间距 */
 }
 
 .info-container {
